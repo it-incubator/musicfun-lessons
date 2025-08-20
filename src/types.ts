@@ -75,3 +75,33 @@ export type TracksResponse = {
     included: ArtistIncludedItem[];
     meta: Meta;
 };
+
+
+export type TrackTag = {
+    id: string;
+    name: string;
+};
+
+export type TrackArtist = {
+    id: string;
+    name: string;
+};
+
+export type TrackAttributesFull = TrackAttributes & {
+    lyrics: string;
+    releaseDate: string;
+    updatedAt: string;
+    duration: number;
+    tags: TrackTag[];
+    artists: TrackArtist[];
+};
+
+export type TrackDataItemFull = {
+    id: string;
+    type: "tracks";
+    attributes: TrackAttributesFull;
+};
+
+export type TrackResponse = {
+    data: TrackDataItemFull;
+};
