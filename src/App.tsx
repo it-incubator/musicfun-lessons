@@ -13,8 +13,9 @@ export function App() {
     return (
         <div>
             <h1>Music Fun</h1>
+            <button onClick={() => setSelectedTrackId(null)}>Reset Selection</button>
             <div style={{'display': 'flex', 'gap': '20px'}}>
-                <TracksList onTrackSelected={handleSelectTrackClick} />
+                <TracksList selectedTrackId={selectedTrackId} onTrackSelected={handleSelectTrackClick} />
 
                 <TrackDetail  trackId={selectedTrackId} />
             </div>

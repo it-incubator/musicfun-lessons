@@ -5,11 +5,16 @@ import {api} from "./api.ts";
 
 type Props = {
     onTrackSelected: (trackId: string) => void
+    selectedTrackId: string | null
 }
 
 export const TracksList = (props: Props) => {
     const [listQueryStatus, setListQueryStatus] = useState<'success' | 'loading'>('loading') // FSM
     const [tracks, setTracks] = useState<TrackDataItem[] | null>(null)
+
+    useEffect(() => {
+        setSelectedTrackId(props.selectedTrackId);
+    }, [props.selectedTrackId]);
 
     useEffect(() => {
         // rest api

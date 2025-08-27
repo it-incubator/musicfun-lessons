@@ -17,6 +17,7 @@ export function TrackDetail(props: Props) {
         abortControllerRef.current?.abort()
 
         if (!props.trackId) {
+            setTrack(null);
             return;
         }
 
