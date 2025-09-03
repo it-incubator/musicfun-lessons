@@ -7,7 +7,9 @@ type Props = {
 
 export function TrackDetail(props: Props) {
     const {data, status} = useQuery({
-        queryFn: () => api.getTrack(props.trackId!),
+        queryFn: ({signal}) => {
+            return api.getTrack(props.trackId!, signal);
+        },
         enabled: Boolean(props.trackId),
         queryKey: ['track', props.trackId]
     })

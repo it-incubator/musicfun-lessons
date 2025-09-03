@@ -1,7 +1,11 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
+
+type QueryFnParams = {
+    signal?: AbortSignal
+}
 
 type Options<T> = {
-    queryFn: () => Promise<T>
+    queryFn: (params: QueryFnParams) => Promise<T>
     enabled?: boolean,
     queryKey: Array<string | number | null>
 }
@@ -20,7 +24,12 @@ export function useQuery<D>(options: Options<D>) {
     const [status, setStatus] = useState<'pending' | 'success' | 'loading'>('loading') // FSM
     const [data, setData] = useState<D | null>(null)
 
+    const abortControllerRef = useRef<AbortController>(null)
+
     useEffect(() => {
+
+        abortControllerRef.current?.abort()
+
         if (queryKey.some(k => k === null)){
         //if (!queryKey.every(k => k !== null)){
             setStatus('pending')
@@ -31,7 +40,13 @@ export function useQuery<D>(options: Options<D>) {
         if (!enabled) {
             return
         }
-        queryFn().then(json => {
+
+
+        abortControllerRef.current = new AbortController()
+
+        queryFn({
+            signal: abortControllerRef.current.signal
+        }).then(json => {
             setData(json)
             setStatus('success')
         })
@@ -41,12 +56,3 @@ export function useQuery<D>(options: Options<D>) {
         data, status
     }
 }
-
-function pingPong<D>(data: D) {
-    return data
-}
-
-
-let a = pingPong(23)
-a = 'dsd'
-console.log(a)
