@@ -2,8 +2,17 @@ import {TracksList} from "./TracksList.tsx";
 import {TrackDetail} from "./TrackDetail.tsx";
 import {useState} from "react";
 
-export const App = () => {
+function useApp() {
     const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
+
+    return {
+        selectedTrackId,
+        setSelectedTrackId
+    }
+}
+
+export const App = () => {
+    const {setSelectedTrackId, selectedTrackId} = useApp()
 
     return (
         <div>
