@@ -1,7 +1,6 @@
 import {Track} from "./Track.tsx";
 import * as React from "react";
-import {useState} from "react";
-import type {TrackDataItem} from "./types.ts";
+import {useQuery} from "./useQuery.ts";
 import {api} from "./api.ts";
 
 type Props = {
@@ -10,20 +9,14 @@ type Props = {
 }
 
 export function TracksList(props: Props) {
-    const [listQueryStatus, setListQueryStatus] = useState<'pending' | 'success' | 'loading'>('loading') // FSM
-    const [tracks, setTracks] = useState<TrackDataItem[] | null>(null)
-    //const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
 
-    React.useEffect(() => {
-        // rest api
-        api.getTracks()
-            .then(json => {
-                setTracks(json.data);
-                setListQueryStatus('success')
-            })
-    }, [])
+    const {data, status} = useQuery({
+        queryFn: () => api.getTracks(),
+        queryKey: ['tracks']
+    })
 
-    if (listQueryStatus === 'loading') {
+
+    if (status === 'loading') {
         return <div>loading...</div>
     }
 
@@ -33,8 +26,8 @@ export function TracksList(props: Props) {
     }
 
     return <ul>
-        {tracks?.map(t => {
-            return <Track
+        {data?.data.map(t => {
+            return <Track key={t.id}
                 onSelect={ handleSelect }
                 isSelected={t.id === props.selectedTrackId}
                 track={t}
