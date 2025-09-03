@@ -11,19 +11,19 @@ type Props = {
 
 function useTracksList(onTrackSelect: (trackId: string) => void) {
     const {
-        queryStatus: listQueryStatus,
-        setQueryStatus: setListQueryStatus,
+        status: listQueryStatus,
         data: tracks,
-        setData: setTracks
-    } = useQuery<TrackDataItem[]>() // FSM
+    } = useQuery<TrackDataItem[]>({
+        queryKeys: [],
+        queryFn: () => {
+            return  api.getTracks()
+                .then(json => json.data)
+        }
+    }) // FSM
 
     React.useEffect(() => {
         // rest api
-        api.getTracks()
-            .then(json => {
-                setTracks(json.data);
-                setListQueryStatus('success')
-            })
+
     }, [])
 
     const handleSelect = (trackId: string) => {
