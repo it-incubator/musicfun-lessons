@@ -4,8 +4,13 @@ import {api} from "./api.ts";
 
 type Props = {
     onTrackSelect: (trackId: string) => void
-    selectedTrackId: string | null
+    selectedTrackId: string | null,
+   // children: ReactElement
 }
+
+// const props: Props = {
+//     children: <div></div>
+// }
 
 export function TracksList(props: Props) {
 

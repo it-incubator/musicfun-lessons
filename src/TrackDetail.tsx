@@ -6,6 +6,7 @@ type Props = {
 }
 
 export function TrackDetail(props: Props) {
+    console.log('TrackDetail')
     const {data, status} = useQuery({
         queryFn: ({signal}) => {
             return api.getTrack(props.trackId!, signal);
@@ -27,6 +28,5 @@ export function TrackDetail(props: Props) {
             <div>{data!.data.attributes.addedAt}</div>
             <div>likes: {data!.data.attributes.likesCount}</div>
             <div>lyrics: {data!.data.attributes.lyrics}</div>
-
-    </div>;
+    </div>
 }

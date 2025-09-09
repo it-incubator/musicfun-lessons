@@ -1,13 +1,12 @@
 import {useEffect, useRef, useState} from "react";
+import {queryClient} from "./query-client-instance.ts";
+import type {Entry, QueryFnParams, QueryKey} from "./query-client.ts";
 
-type QueryFnParams = {
-    signal?: AbortSignal
-}
 
 type Options<T> = {
     queryFn: (params: QueryFnParams) => Promise<T>
     enabled?: boolean,
-    queryKey: Array<string | number | null>
+    queryKey: QueryKey
 }
 
 export function useQuery<D>(options: Options<D>) {
@@ -21,21 +20,30 @@ export function useQuery<D>(options: Options<D>) {
         throw new Error('queryKey is required')
     }
 
-    const [status, setStatus] = useState<'pending' | 'success' | 'loading'>('loading') // FSM
-    const [data, setData] = useState<D | null>(null)
+    const initEntry = queryClient.initEntry(queryKey, enabled);
+
+    // const [status, setStatus] = useState<'pending' | 'success' | 'loading'>('loading') // FSM
+    // const [data, setData] = useState<D | null>(null)
+
+    const [entry, setEntry] = useState<Entry>(initEntry)
+
+    useEffect(() => {
+        setEntry(initEntry);
+    }, [initEntry])
 
     const abortControllerRef = useRef<AbortController>(null)
 
+
     useEffect(() => {
 
-        abortControllerRef.current?.abort()
+        abortControllerRef.current?.abort('Abort because new request')
 
-        if (queryKey.some(k => k === null)){
-        //if (!queryKey.every(k => k !== null)){
-            setStatus('pending')
-            setData(null)
-            return
-        }
+        // if (queryKey.some(k => k === null)) {
+        //     //if (!queryKey.every(k => k !== null)){
+        //     // setStatus('pending')
+        //     // setData(null)
+        //     return
+        // }
 
         if (!enabled) {
             return
@@ -44,15 +52,24 @@ export function useQuery<D>(options: Options<D>) {
 
         abortControllerRef.current = new AbortController()
 
-        queryFn({
-            signal: abortControllerRef.current.signal
-        }).then(json => {
-            setData(json)
-            setStatus('success')
-        })
+        const subscriber = () => {
+            setEntry({...queryClient.get(queryKey)});
+        }
+
+        let unsubscribe: () => void;
+
+        queryClient.fetch(queryFn, queryKey, abortControllerRef.current.signal)
+            .then((e) => {
+                unsubscribe = queryClient.subscribe(queryKey, subscriber)
+                setEntry({...e})
+            });
+
+        return () => {
+            unsubscribe?.();
+        }
     }, queryKey)
 
     return {
-        data, status
+        data: entry?.data, status: entry?.status ?? 'loading'
     }
 }
