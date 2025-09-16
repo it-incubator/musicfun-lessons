@@ -1,26 +1,22 @@
-import {TracksList} from "./TracksList.tsx";
-import {TrackDetail} from "./TrackDetail.tsx";
-import {useState} from "react";
+import {MainPage} from "./MainPage.tsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: Infinity,
+            gcTime: 10 * 1000
+        }
+    }
+});
+// @ts-expect-error we dont need typing
+window.__TANSTACK_QUERY_CLIENT__ = queryClient;
+
 
 export const App = () => {
-    const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
-    const [isDublicationDetailVisible, setIsDublicationDetailVisible] = useState(false)
-
-    return (
-        <div>
-            <button onClick={() => setSelectedTrackId(null)}>Reset</button>
-            <button onClick={() => setIsDublicationDetailVisible(!isDublicationDetailVisible)}>Toggle</button>
-            <div style={{'display': 'flex', 'gap': '20px'}}>
-
-                <TracksList
-                    selectedTrackId={selectedTrackId}
-                    onTrackSelect={(trackId) => {
-                    setSelectedTrackId(trackId)
-                }}/>
-                <TrackDetail trackId={selectedTrackId}/>
-
-                {isDublicationDetailVisible && <TrackDetail trackId={selectedTrackId}/> }
-            </div>
-        </div>
-    )
+   return (
+       <QueryClientProvider client={queryClient}>
+         <MainPage />
+       </QueryClientProvider>
+   )
 }

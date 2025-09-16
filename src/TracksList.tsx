@@ -1,27 +1,29 @@
 import {Track} from "./Track.tsx";
-import {useQuery} from "./useQuery.ts";
-import {api} from "./api.ts";
+import {useQuery} from "@tanstack/react-query";
+import {client} from "./shared/api/client.ts";
 
 type Props = {
     onTrackSelect: (trackId: string) => void
     selectedTrackId: string | null,
-   // children: ReactElement
 }
-
-// const props: Props = {
-//     children: <div></div>
-// }
 
 export function TracksList(props: Props) {
 
-    const {data, status} = useQuery({
-        queryFn: () => api.getTracks(),
-        queryKey: ['tracks']
+    const {data, isPending, isError} = useQuery({
+        queryFn: async () => {
+            const clientData = await client.GET('/playlists/tracks')
+            return clientData.data!
+        },
+        queryKey: ['tracks', 'list']
     })
 
 
-    if (status === 'loading') {
+    if (isPending) {
         return <div>loading...</div>
+    }
+
+    if (isError) {
+        return <div>Can't load tracks list</div>
     }
 
     const handleSelect = (trackId: string) => {
@@ -30,11 +32,11 @@ export function TracksList(props: Props) {
     }
 
     return <ul>
-        {data?.data.map(t => {
+        {data.data.map(t => {
             return <Track key={t.id}
-                onSelect={ handleSelect }
-                isSelected={t.id === props.selectedTrackId}
-                track={t}
+                          onSelect={handleSelect}
+                          isSelected={t.id === props.selectedTrackId}
+                          track={t}
             />;
         })
         }
