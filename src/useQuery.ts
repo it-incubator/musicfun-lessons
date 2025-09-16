@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import {queryClient} from "./query-client-instance.ts";
+import {useQueryClient} from "./query-client-context.tsx";
 import type {Entry, QueryFnParams, QueryKey} from "./query-client.ts";
 
 
@@ -20,6 +20,7 @@ export function useQuery<D>(options: Options<D>) {
         throw new Error('queryKey is required')
     }
 
+    const queryClient = useQueryClient();
     const initEntry = queryClient.initEntry(queryKey, enabled);
 
     // const [status, setStatus] = useState<'pending' | 'success' | 'loading'>('loading') // FSM
