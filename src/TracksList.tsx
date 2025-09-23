@@ -1,9 +1,14 @@
 import {Track} from "./Track.tsx";
 import {useQuery} from "@tanstack/react-query";
 import {client} from "./shared/api/client.ts";
+import {useSearchParams} from "react-router";
 
 
 export function TracksList() {
+
+    let [searchParams] = useSearchParams();
+
+
 
     const {data, isPending, isError} = useQuery({
         queryFn: async () => {
@@ -19,7 +24,10 @@ export function TracksList() {
     }
 
     if (isError) {
-        return <div>Can't load tracks list</div>
+        return <div>
+            sort by {searchParams.get('sort')}
+            <hr/>
+            Can't load tracks list</div>
     }
 
     return <ul>

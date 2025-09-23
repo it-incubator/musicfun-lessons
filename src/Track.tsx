@@ -1,5 +1,5 @@
 import type {SchemaTrackListItemOutput} from "./shared/api/schema.ts";
-import {NavLink} from "./shared/libs/router/Route.tsx";
+import {NavLink} from "react-router";
 
 type Props = {
     track: SchemaTrackListItemOutput
