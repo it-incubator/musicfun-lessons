@@ -4,12 +4,12 @@ import {TrackDetail} from "./TrackDetail.tsx";
 
 export const MainPage = () => {
     const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null)
-    const [isDublicationDetailVisible, setIsDublicationDetailVisible] = useState(false)
 
     return (
         <div>
-            <button onClick={() => setSelectedTrackId(null)}>Reset</button>
-            <button onClick={() => setIsDublicationDetailVisible(!isDublicationDetailVisible)}>Toggle</button>
+            <button onClick={() => {
+                setSelectedTrackId(null);
+            }}>Reset</button>
             <div style={{'display': 'flex', 'gap': '20px'}}>
 
                 <TracksList
@@ -19,7 +19,7 @@ export const MainPage = () => {
                     }}/>
                 <TrackDetail trackId={selectedTrackId}/>
 
-                {isDublicationDetailVisible && <TrackDetail trackId={selectedTrackId}/> }
+                {/*{isDublicationDetailVisible && <TrackDetail trackId={selectedTrackId}/> }*/}
             </div>
         </div>
     )

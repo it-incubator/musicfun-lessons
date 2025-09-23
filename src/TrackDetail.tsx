@@ -1,30 +1,33 @@
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {client} from "./shared/api/client.ts";
+import {useParams} from "./shared/libs/router/mini-router.tsx";
 
 type Props = {
-    trackId: string | null
+    //trackId: string | null
 }
 
 export function TrackDetail(props: Props) {
     console.log('TrackDetail')
+    const params = useParams();
+
     const {data, isPending, isError, isFetching} = useQuery({
         queryFn: async ({signal}) => {
             const clientData = await  client.GET('/playlists/tracks/{trackId}', {
                 params: {
                     path: {
-                        trackId: props.trackId!
+                        trackId: params.trackId!
                     }
                 },
                 signal: signal
             });
             return clientData.data!
         },
-        enabled: Boolean(props.trackId),
-        queryKey: ['tracks', 'detail', props.trackId],
+        enabled: Boolean(params.trackId),
+        queryKey: ['tracks', 'detail', params.trackId],
         placeholderData: keepPreviousData
     })
 
-    if (!props.trackId) {
+    if (!params.trackId) {
         return <div>no track selected</div>
     }
 
