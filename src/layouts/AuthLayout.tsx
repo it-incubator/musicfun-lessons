@@ -1,6 +1,5 @@
-import {NavLink, type NavLinkRenderProps, Outlet, useParams, generatePath} from "react-router";
+import {NavLink, type NavLinkRenderProps, Outlet, useParams} from "react-router";
 import styles from "../App.module.css";
-
 
 
 export const AuthLayout = () => {
@@ -14,14 +13,14 @@ export const AuthLayout = () => {
 const renderClassName = ({ isActive }: NavLinkRenderProps) =>
     isActive ? styles.active : ""
 
-const NavbarMenuItem = ({to, title}) => {
-    return (
-        <NavLink className={({ isActive }) =>
-            isActive ? styles.active : ""} to={to}>{title}</NavLink>
-    )
-}
+// const NavbarMenuItem = ({to, title}) => {
+//     return (
+//         <NavLink className={({ isActive }) =>
+//             isActive ? styles.active : ""} to={to}>{title}</NavLink>
+//     )
+// }
 
-const renderNavbarMenuItem = (to, title) => {
+const renderNavbarMenuItem = (to: string, title: string) => {
     return (
         <NavLink className={({ isActive }) =>
             isActive ? styles.active : ""} to={to}>{title}</NavLink>

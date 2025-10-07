@@ -1,17 +1,16 @@
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {TracksList} from "./TracksList.tsx";
+import {TracksList} from "./features-layer/tracks-slice/ui-segment/TracksList.tsx";
 import {TrackDetail} from "./TrackDetail.tsx";
 // import {BrowserRouter, NavLink, Route} from "./shared/libs/router/Route.tsx";
-import {BrowserRouter, NavLink, type NavLinkRenderProps, Route, Routes, useParams} from "react-router";
+import {BrowserRouter, Route, Routes, useParams} from "react-router";
 import {AuthLayout, GlobalLayout} from "./layouts/AuthLayout.tsx";
 import {CommonLayout} from "./layouts/CommonLayout.tsx";
-import styles from './App.module.css'
 
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             staleTime: Infinity,
-            gcTime: 10 * 1000
+            gcTime: 60 * 1000
         }
     }
 });
@@ -41,7 +40,7 @@ export const App = () => {
                             <Route path='*' element={<AuthNotFound />} />
                         </Route>
 
-                        <Route element={<CommonLayout />}>
+                        <Route  element={<CommonLayout />}>
                             <Route path='/' element={<TracksList/>}/>
                             <Route path='/tracks/:trackId' element={<TrackDetail/>}/>
                         </Route>

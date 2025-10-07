@@ -1,5 +1,5 @@
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
-import {client} from "./shared/api/client.ts";
+import {client} from "./shared-layer/api-segment/client.ts";
 import {useParams} from "react-router";
 
 
