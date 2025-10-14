@@ -1,10 +1,11 @@
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {TracksList} from "./features-layer/tracks-slice/ui-segment/TracksList.tsx";
+import {TracksList} from "./widget-layer/tracks-slice/ui-segment/TracksList.tsx";
 import {TrackDetail} from "./TrackDetail.tsx";
 // import {BrowserRouter, NavLink, Route} from "./shared/libs/router/Route.tsx";
 import {BrowserRouter, Route, Routes, useParams} from "react-router";
 import {AuthLayout, GlobalLayout} from "./layouts/AuthLayout.tsx";
 import {CommonLayout} from "./layouts/CommonLayout.tsx";
+import {Profile} from "./pages-layer/Profile.tsx";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -23,8 +24,6 @@ export const App = () => {
     // const [c, setC] = useState(0)
 
 
-
-
     return (
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
@@ -32,7 +31,7 @@ export const App = () => {
 
                 <Routes>
 
-                    <Route path={'/:lang?'} element={<GlobalLayout />}>
+                    <Route element={<GlobalLayout />}>
                         <Route path={'auth'} element={<AuthLayout />}>
                             {/*<Route path={'auth'}>*/}
                             <Route path={'login'} element={<Login />} />
@@ -42,6 +41,7 @@ export const App = () => {
 
                         <Route  element={<CommonLayout />}>
                             <Route path='/' element={<TracksList/>}/>
+                            <Route path='/profile/:userId' element={<Profile />}/>
                             <Route path='/tracks/:trackId' element={<TrackDetail/>}/>
                         </Route>
 

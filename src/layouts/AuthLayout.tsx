@@ -1,5 +1,7 @@
-import {NavLink, type NavLinkRenderProps, Outlet, useParams} from "react-router";
+import {NavLink, Outlet} from "react-router";
 import styles from "../App.module.css";
+import {useQuery} from "@tanstack/react-query";
+import {client} from "../shared-layer/api-segment/client.ts";
 
 
 export const AuthLayout = () => {
@@ -10,16 +12,6 @@ export const AuthLayout = () => {
   </div>;
 };
 
-const renderClassName = ({ isActive }: NavLinkRenderProps) =>
-    isActive ? styles.active : ""
-
-// const NavbarMenuItem = ({to, title}) => {
-//     return (
-//         <NavLink className={({ isActive }) =>
-//             isActive ? styles.active : ""} to={to}>{title}</NavLink>
-//     )
-// }
-
 const renderNavbarMenuItem = (to: string, title: string) => {
     return (
         <NavLink className={({ isActive }) =>
@@ -29,20 +21,20 @@ const renderNavbarMenuItem = (to: string, title: string) => {
 
 
 export const GlobalLayout = () => {
-
-    const params = useParams()
-    let lang = params['lang']
-    if (!lang) lang = 'ge'
+    const { data: meData, isLoading} = useQuery({
+        queryKey: ['me'],
+        queryFn: async () => {
+            const resp = await client.GET('/auth/me')
+            return resp.data
+        }
+    })
 
     return <div>
         <header className={styles.header}>
-            {/*<NavbarMenuItem to={'/'} title={'Main'}/>*/}
-            {/*<NavbarMenuItem to={'/login'} title={'Login'}/>*/}
-            {/*<NavbarMenuItem to={'/register'} title={'Register'}></NavbarMenuItem>*/}
             {renderNavbarMenuItem('/', 'Main')}
-            {renderNavbarMenuItem(`/${lang}/auth/login`, 'Login')}
-            {renderNavbarMenuItem(`/${lang}/auth/register`, 'Register')}
-            <NavLink className={renderClassName} to={'/blabla'}>Blabla</NavLink>
+            {!isLoading && !meData && renderNavbarMenuItem(`/auth/login`, 'Login')}
+            {!isLoading && !meData && renderNavbarMenuItem(`/auth/register`, 'Register')}
+            {meData && renderNavbarMenuItem(`/profile/` + meData.userId, meData.login)}
         </header>
         <Outlet />
         <footer>footer from GLOBAL layout</footer>
