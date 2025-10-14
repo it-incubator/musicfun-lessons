@@ -4,7 +4,6 @@ import {type ChangeEvent, useState} from "react";
 import {Pagination} from "../../../shared-layer/ui-segment/Pagination.tsx";
 import {Search} from "../../../shared-layer/ui-segment/Search.tsx";
 
-
 function usePagination() {
     const [pageNumber, setPageNumber] = useState(1)
     const [pageSize, setPageSize] = useState(5)
