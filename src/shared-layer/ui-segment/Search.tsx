@@ -66,7 +66,7 @@ export function Search({
         onSearch(search)
     }
 
-    return <> <input value={search} onChange={handleSearchChange}/>
+    return <> <input value={search} placeholder={'search...'} onChange={handleSearchChange}/>
         {isSearchButtonVisible && <button onClick={handleSearchClick}>Search</button>}
     </>
 }

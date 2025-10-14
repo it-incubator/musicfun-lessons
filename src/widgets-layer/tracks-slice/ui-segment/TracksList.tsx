@@ -21,9 +21,12 @@ function usePagination() {
     }
 }
 
-export function TracksList() {
-    //const [searchParams] = useSearchParams();
-    console.log('TracksList')
+type Props = {
+    userId?: string,
+    includeDrafts?: boolean
+}
+
+export function TracksList({userId, includeDrafts}: Props) {
     const [search, setSearch] = useState('')
 
     const {
@@ -36,7 +39,9 @@ export function TracksList() {
     const {data, isPending, isError} = useTracksQuery({
         pageSize,
         pageNumber,
-        search
+        search,
+        userId,
+        includeDrafts
     })
 
 
@@ -85,8 +90,7 @@ export function TracksList() {
         />
         <ul style={{opacity: isPageContentUnactual ? '0.4' : '1'}}>
             {data.data.map(t => {
-                return <Track key={t.id} track={t}
-                />;
+                return <Track key={t.id} track={t} />;
             })
             }
         </ul>

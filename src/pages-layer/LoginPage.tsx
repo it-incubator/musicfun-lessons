@@ -1,6 +1,6 @@
 import {useParams} from "react-router";
 
-export const Login = () => {
+export const LoginPage = () => {
     let {lang} = useParams();
     if (!lang) lang = 'ge'
     return <div>

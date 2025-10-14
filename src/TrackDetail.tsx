@@ -1,12 +1,11 @@
 import {keepPreviousData, useQuery} from "@tanstack/react-query";
 import {client} from "./shared-layer/api-segment/client.ts";
-import {useParams} from "react-router";
 
+type Props = {
+    trackId: string;
+}
 
-export function TrackDetail() {
-    console.log('TrackDetail')
-
-    const {trackId} = useParams();
+export function TrackDetail({trackId}: Props) {
 
     const {data, isPending, isError, isFetching} = useQuery({
         queryFn: async ({signal}) => {
