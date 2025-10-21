@@ -3,7 +3,7 @@ import {client} from "../../../shared-layer/api-segment/client.ts";
 
 export const useMeQuery = () => {
     return useQuery({
-        queryKey: [],
+        queryKey: ['auth', 'me'],
         queryFn: async () => {
             const wrapper = await client.GET('/auth/me')
             if (wrapper.error) {
