@@ -14,8 +14,28 @@ const myMiddleware: Middleware = {
         }
 
         return request;
+    },
+    async onResponse({ response }) {
+        if (!response.ok) {
+            // Will produce error messages like "https://example.org/api/v1/example: 404 Not Found".
+            const responseBody = await response.json()
+            const error = new APIError(response, responseBody)
+
+            console.log('error')
+            throw error
+        }
     }
 };
 
 
 client.use( myMiddleware )
+
+
+class APIError extends Error {
+    constructor(public response: Response, public body: any) {
+        super(`${response.url} ${response.status} ${response.statusText}`)
+    }
+}
+
+
+

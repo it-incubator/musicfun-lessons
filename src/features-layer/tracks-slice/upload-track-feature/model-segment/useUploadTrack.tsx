@@ -5,8 +5,8 @@ export const useUploadTrack = () => {
     const queryClient = useQueryClient()
 
     return  useMutation({
-        mutationFn: async ({title, file}:{title: string, file: File}) => {
-            const wrapper = await  client.POST('/playlists/tracks/upload', {
+        mutationFn: async ({title, file}:{title: string, file: File}) =>
+            client.POST('/playlists/tracks/upload', {
                 body: {
                     title: title,
                     file: file as unknown as string,
@@ -17,10 +17,7 @@ export const useUploadTrack = () => {
                     formData.append('file', body.file);
                     return formData;
                 }
-            })
-            if (wrapper.error) throw wrapper.error
-            return wrapper.data
-        },
+            }),
         onSuccess: async () => {
             queryClient.invalidateQueries({
                 queryKey: ['tracks', 'list']

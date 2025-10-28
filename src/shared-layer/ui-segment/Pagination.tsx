@@ -12,7 +12,7 @@ export function Pagination(props: PaginationProps) {
 
     return <div style={{display: 'flex', flexDirection: 'row'}}>
         {[...Array(totalPagesCount)].map((_, index) => {
-            return <div
+            return <div key={index}
                 onClick={() => {
                     if (currentPage !== index + 1) {
                         props.onPageSelect(index + 1)

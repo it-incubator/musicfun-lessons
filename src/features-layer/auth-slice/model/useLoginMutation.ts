@@ -1,6 +1,7 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {client} from "../../../shared-layer/api-segment/client.ts";
 import {authStorage} from "../../../shared-layer/libs-segment/authStorage.ts";
+import {unwrap} from "./useMeQuery.tsx";
 
 export const useLoginMutation = () => {
     const queryClient = useQueryClient()
@@ -8,11 +9,7 @@ export const useLoginMutation = () => {
     return useMutation({
         mutationFn: async ({login, password}: { login: string, password: string }) => {
             authStorage.saveBasicCredentials(login, password)
-            const wrapper = await client.GET('/auth/me')
-            if (wrapper.error) {
-                throw wrapper.error;
-            }
-            return wrapper.data
+            return unwrap(client.GET('/auth/me'))
         },
         onError: () => {
             authStorage.removeBasicCredentials();

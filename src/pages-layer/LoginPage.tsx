@@ -7,7 +7,7 @@ import {useLoginMutation} from "../features-layer/auth-slice/model/useLoginMutat
 
 const schema = z.object({
     login: z.string({message: 'SHould be a string'}).min(1),
-    password: z.string().min(6, "Минимум 6 символов"),
+    password: z.string().min(3, "Минимум 3 символов"),
 });
 
 type LoginFormInputs = z.infer<typeof schema>;
