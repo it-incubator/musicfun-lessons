@@ -6,7 +6,7 @@ import {GlobalLayout} from "./layouts/GlobalLayout.tsx";
 import {LoginPage} from "./pages-layer/LoginPage.tsx";
 import {RegisterPage} from "./pages-layer/RegisterPage.tsx";
 import {NotFoundPage} from "./pages-layer/NotFoundPage.tsx";
-import {ProfilePage} from "./pages-layer/ProfilePage.tsx";
+import {ProfilePage} from "./pages-layer/ProfilePage";
 import {TrackDetailPage} from "./pages-layer/TrackDetailPage.tsx";
 import {TracksListPage} from "./pages-layer/TracksListPage.tsx";
 
