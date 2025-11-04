@@ -1,4 +1,4 @@
-import {type ChangeEvent, useEffect, useRef, useState} from "react";
+import {type ChangeEvent, useEffect, useRef, useState, useEffectEvent} from "react";
 
 type Props = {
     onSearch: (value: string) => void
@@ -17,7 +17,7 @@ export function Search({
     const throttleIsWaitingRef = useRef(false)
     const searchValueRef = useRef('')
 
-    useEffect(() => {
+    const event = useEffectEvent((search: string) => {
         if (!isSearchButtonVisible) {
             switch (mode) {
                 case 'immediate':
@@ -42,13 +42,19 @@ export function Search({
                     onSearch(search)
             }
         }
+    })
+
+    // useEffectEvent
+    useEffect(() => {
+        event(search);
 
         return () => {
             if (mode === 'debounce') {
                 clearTimeout(timerIdRef.current);
             }
         }
-    }, [search, mode, isSearchButtonVisible, onSearch])
+
+    }, [search, mode])
 
     useEffect(() => {
         return () => {

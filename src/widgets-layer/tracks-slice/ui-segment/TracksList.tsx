@@ -1,30 +1,41 @@
 import {Track} from "../../../Track.tsx";
 import {useTracksQuery} from "../model-segment/useTracksQuery.tsx";
-import {type ChangeEvent, useState} from "react";
+import {type ChangeEvent, useCallback, useState} from "react";
 import {Pagination} from "../../../shared-layer/ui-segment/Pagination.tsx";
 import {Search} from "../../../shared-layer/ui-segment/Search.tsx";
 import {usePagination} from "@/shared-layer/utils/hooks/usePagination.tsx";
 import {useCounter} from "@/widgets-layer/playlists-slice/ui-segment/PlaylistsList.tsx";
+import {useParamsWithSync} from "@/shared-layer/utils/hooks/useParamsWithSync.ts";
 
 type Props = {
     userId?: string,
     includeDrafts?: boolean
 }
 
-export function TracksList({userId, includeDrafts}: Props) {
-    const [search, setSearch] = useState('')
+const tracksListFilterDefaults = {
+    pageNumber: 1,
+    pageSize: 5,
+    search: '',
+}
 
-    const paginator = usePagination()
+export function TracksList({userId, includeDrafts}: Props) {
+
+    const {search, pageNumber, pageSize, setSearchParams} = useParamsWithSync('tracks-filters', tracksListFilterDefaults)
+
 
     const {data, isPending, isError} = useTracksQuery({
-       pageNumber: paginator.pageNumber,
-       pageSize: paginator.pageSize,
+       pageNumber: pageNumber,
+       pageSize: pageSize,
         search,
         userId,
         includeDrafts
     })
 
     const {count, inc} =  useCounter()
+
+    const handleSearchClick = useCallback((value: string) => {
+        setSearchParams('search', value)
+    }, [setSearchParams])
 
     if (isPending) {
         return <div>loading...</div>
@@ -37,16 +48,14 @@ export function TracksList({userId, includeDrafts}: Props) {
             Can't load tracks list</div>
     }
 
-    const isPageContentUnactual = data.meta.page !== paginator.pageNumber
+    const isPageContentUnactual = data.meta.page !== pageNumber
     //const isPageContentUnactual = !isPending && isFetching
 
     const handlePageSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
-        paginator.setPageSize(Number(e.currentTarget.value))
+        setSearchParams('pageSize', e.currentTarget.value)
     }
 
-    const handleSearchClick = (value: string) => {
-                    setSearch(value)
-    }
+
 
     return <>
         <Search onSearch={handleSearchClick}
@@ -55,16 +64,18 @@ export function TracksList({userId, includeDrafts}: Props) {
         />
     <hr/>
         zustand state: <button onClick={inc}>{count}</button>
-        <select value={paginator.pageSize} onChange={handlePageSizeChange}>
+        <select value={pageSize} onChange={handlePageSizeChange}>
             <option value={5}>5 items</option>
             <option value={10}>10 items</option>
             <option value={20}>20 items</option>
         </select>
 
         <Pagination total={data.meta.totalCount!}
-                    skip={data.meta.pageSize * (paginator.pageNumber - 1)}
+                    skip={data.meta.pageSize * (pageNumber - 1)}
                     limit={data.meta.pageSize}
-                    onPageSelect={paginator.setPageNumber}
+                    onPageSelect={(pageNumber) => {
+                        setSearchParams('pageNumber', pageNumber.toString())
+                    }}
         />
         <ul style={{opacity: isPageContentUnactual ? '0.4' : '1'}}>
             {data.data.map(t => {
