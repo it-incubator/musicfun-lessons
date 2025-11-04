@@ -1,6 +1,6 @@
 import {Track} from "../../../Track.tsx";
 import {useTracksQuery} from "../model-segment/useTracksQuery.tsx";
-import {useEffect} from "react";
+import {useEffect, useEffectEvent} from "react";
 import {Pagination} from "../../../shared-layer/ui-segment/Pagination.tsx";
 import {useSearchParams} from "react-router";
 
@@ -16,13 +16,16 @@ export function TracksListForFindBug({userId, includeDrafts}: Props) {
 
     const pageNumber = params.get('pageNumber')
 
+    const tick = useEffectEvent(() => {
+        setParams((prev) => {
+            prev.set('pageNumber', (Number(prev.get('pageNumber')) + 1).toString())
+            return prev;
+        })
+    })
+
     useEffect(() => {
         setInterval(() => {
-            setParams((prev) => {
-                prev.set('pageNumber', (Number(prev.get('pageNumber')) + 1).toString())
-                return prev;
-            })
-
+            tick()
         }, 5000)
 
     }, [])
