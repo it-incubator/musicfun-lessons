@@ -54,16 +54,17 @@ export const useParamsWithSync = <T,>(key: string, defaults: T) => {
         })
     }, [searchParams, defaults])
 
-    const setParams = (key: keyof T, value: string) => {
+    const setParams = (propName: keyof T, value: string) => {
         setSearchParams((prevSearchParams) => {
+            console.log(prevSearchParams.toString())
             // @ts-expect-error pofigu
-            if (value === defaults[key].toString()) {
+            if (value === defaults[propName].toString()) {
                 // @ts-expect-error pofigu
-                prevSearchParams.delete(key)
+                prevSearchParams.delete(propName)
                 return prevSearchParams
             }
             // @ts-expect-error pofigu
-            prevSearchParams.set(key, value)
+            prevSearchParams.set(propName, value)
             return prevSearchParams
         })
     }

@@ -33,9 +33,9 @@ export function TracksList({userId, includeDrafts}: Props) {
 
     const {count, inc} =  useCounter()
 
-    const handleSearchClick = useCallback((value: string) => {
+    const handleSearchClick = (value: string) => {
         setSearchParams('search', value)
-    }, [setSearchParams])
+    }
 
     if (isPending) {
         return <div>loading...</div>
@@ -54,8 +54,6 @@ export function TracksList({userId, includeDrafts}: Props) {
     const handlePageSizeChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setSearchParams('pageSize', e.currentTarget.value)
     }
-
-
 
     return <>
         <Search onSearch={handleSearchClick}

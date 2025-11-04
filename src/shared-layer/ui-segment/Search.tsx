@@ -46,7 +46,32 @@ export function Search({
 
     // useEffectEvent
     useEffect(() => {
-        event(search);
+        //event(search);
+
+        if (!isSearchButtonVisible) {
+            switch (mode) {
+                case 'immediate':
+                    onSearch(search)
+                    break;
+                case 'debounce':
+                    timerIdRef.current = setTimeout(() => {
+                        onSearch(search)
+                    }, 1000)
+                    break;
+                case 'throttle':
+                    if (throttleIsWaitingRef.current) {
+                        return;
+                    }
+                    timerIdRef.current = setTimeout(() => {
+                        onSearch(searchValueRef.current)
+                        throttleIsWaitingRef.current = false
+                    }, 5000)
+                    throttleIsWaitingRef.current = true;
+                    break;
+                default:
+                    onSearch(search)
+            }
+        }
 
         return () => {
             if (mode === 'debounce') {
@@ -54,7 +79,7 @@ export function Search({
             }
         }
 
-    }, [search, mode])
+    }, [search, mode, onSearch])
 
     useEffect(() => {
         return () => {
