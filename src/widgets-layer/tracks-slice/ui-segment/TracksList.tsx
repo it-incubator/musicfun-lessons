@@ -4,6 +4,7 @@ import {type ChangeEvent, useState} from "react";
 import {Pagination} from "../../../shared-layer/ui-segment/Pagination.tsx";
 import {Search} from "../../../shared-layer/ui-segment/Search.tsx";
 import {usePagination} from "@/shared-layer/utils/hooks/usePagination.tsx";
+import {useCounter} from "@/widgets-layer/playlists-slice/ui-segment/PlaylistsList.tsx";
 
 type Props = {
     userId?: string,
@@ -23,6 +24,7 @@ export function TracksList({userId, includeDrafts}: Props) {
         includeDrafts
     })
 
+    const {count, inc} =  useCounter()
 
     if (isPending) {
         return <div>loading...</div>
@@ -52,6 +54,7 @@ export function TracksList({userId, includeDrafts}: Props) {
                 mode={"throttle"}
         />
     <hr/>
+        zustand state: <button onClick={inc}>{count}</button>
         <select value={paginator.pageSize} onChange={handlePageSizeChange}>
             <option value={5}>5 items</option>
             <option value={10}>10 items</option>

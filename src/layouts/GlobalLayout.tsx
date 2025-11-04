@@ -12,6 +12,15 @@ const renderNavbarMenuItem = (to: string, title: string) => {
 }
 export const GlobalLayout = () => {
 
+
+    return <div>
+       <Header />
+        <Outlet/>
+        <footer>footer from GLOBAL layout</footer>
+    </div>;
+};
+
+const Header = () => {
     const { data, isLoading, isError, error } = useMeQuery();
     const queryClient = useQueryClient()
 
@@ -22,16 +31,13 @@ export const GlobalLayout = () => {
         });
     }
 
-    return <div>
-        <header className={styles.header}>
-            {renderNavbarMenuItem('/', 'Main')}
-            {!data && !isLoading && renderNavbarMenuItem(`/auth/login`, 'Login')}
-            {isError && renderNavbarMenuItem(`/auth/register`, 'Register')}
-            {isError && <span>{JSON.stringify(error)}</span>}
-            {data && renderNavbarMenuItem(`/profile/` + data.userId, data.login)}
-            {data && <button onClick={handleLogoutClick}>Logout</button>}
-        </header>
-        <Outlet/>
-        <footer>footer from GLOBAL layout</footer>
-    </div>;
-};
+
+    return   <header className={styles.header}>
+        {renderNavbarMenuItem('/', 'Main')}
+        {!data && !isLoading && renderNavbarMenuItem(`/auth/login`, 'Login')}
+        {isError && renderNavbarMenuItem(`/auth/register`, 'Register')}
+        {isError && <span>{JSON.stringify(error)}</span>}
+        {data && renderNavbarMenuItem(`/profile/` + data.userId, data.login)}
+        {data && <button onClick={handleLogoutClick}>Logout</button>}
+    </header>
+}

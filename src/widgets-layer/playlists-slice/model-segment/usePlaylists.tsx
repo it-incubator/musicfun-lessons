@@ -10,6 +10,7 @@ export function usePlaylists<P extends PlaylistsParams>(
     params: Strict<PlaylistsParams, P>   // ← здесь проверяем “без лишних ключей”
 ) {
     return useQuery({
+        enabled: true,
         queryKey: ['playlists', 'list', params] as const,
         queryFn: () =>
             unwrap(client.GET('/playlists', { params: { query: params } }))
