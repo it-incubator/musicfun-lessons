@@ -7,35 +7,25 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "api-client-gen": "pnpm openapi-typescript https://musicfun.it-incubator.app/api-json -o src/shared-layer/api-segment/schema.ts --root-types",
-    "localhost-api-client-gen": "pnpm openapi-typescript http://localhost:9001/api-json -o src/shared-layer/api-segment/schema.ts --root-types"
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
-    "@tanstack/react-query": "^5.89.0",
-    "openapi-fetch": "^0.14.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-hook-form": "^7.65.0",
-    "react-router": "^7.9.1",
-    "zod": "^4.1.12",
-    "zustand": "^5.0.8"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
-    "@types/node": "^24.9.1",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react": "^5.0.0",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^6.1.1",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "openapi-typescript": "^7.9.1",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.1",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vite": "^7.2.4"
   },
-  "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748"
+  "packageManager": "pnpm@10.18.3+sha512.bbd16e6d7286fd7e01f6b3c0b3c932cda2965c06a908328f74663f10a9aea51f1129eea615134bf992831b009eabe167ecb7008b597f40ff9bc75946aadfb08d"
 }
