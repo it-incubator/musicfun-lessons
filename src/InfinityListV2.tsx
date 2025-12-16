@@ -1,7 +1,9 @@
 import {useEffect, useEffectEvent, useRef, useState} from "react";
-
+//todo: not working
 export const InfinityListV2 = () => {
-    const [tracks, setTracks] = useState<string[]>([])
+    console.log("InfinityListV2 rendering...");
+    const [tracks, setTracks] = useState<string[]>(null)
+    const [isLoading, setIsLoading] = useState(true)
     const [page, setPage] = useState(1)
 
     const observerRef = useRef<IntersectionObserver | null>(null);
@@ -9,15 +11,21 @@ export const InfinityListV2 = () => {
     // todo: show refFunction for bind to html element
 
     const handleClick = useEffectEvent(() => {
+        console.log(">> handleClick, isLoading: " + isLoading);
+        if (isLoading) return;
+        console.log("tracks.length inside useEffectEvent: " + tracks.length);
         setPage(page + 1)
-        setTimeout(() => {
-            console.log(page + 1)
-            const newTracksFromServer = new Array(10).fill('1');
-            setTracks([...tracks, ...newTracksFromServer]);
-        }, 5000)
+        setIsLoading(true)
+
+        fetchTracks(5000, 'eventEffect').then(newTracksFromServer => {
+            setTracks((prev) =>[...prev, ...newTracksFromServer]);
+            setIsLoading(false)
+        })
     })
 
     useEffect(() => {
+        console.log('✈️ EFFECT')
+        if (!buttonRef.current) return;
         observerRef.current = new IntersectionObserver( (entries) => {
             if (entries[0].isIntersecting) {
                 handleClick();
@@ -36,22 +44,32 @@ export const InfinityListV2 = () => {
     }, []);
 
     useEffect(() => {
-        setTimeout(() => {
-            const newTracksFromServer = new Array(10).fill('1');
+        fetchTracks(1000, 'effect').then(newTracksFromServer => {
             setTracks(newTracksFromServer);
-        }, 1000)
+            setIsLoading(false)
+        })
     }, [])
 
     return <div>
-        {tracks.map((_, i) => {
+        {tracks?.map((_, i) => {
             return (<div key={i} style={{height: '30px',
                 border: '1px solid yellow',
             margin: '20px'}}>{i + 1}</div>)
         })}
-        <button ref={buttonRef}>Show more</button>
+        { tracks &&  <button ref={buttonRef}>Show more</button> }
     </div>
 }
 
+
+const fetchTracks = (msDelay = 5000, src) => {
+    console.log('Fetching tracks... 🎹 from: ' + src);
+    return new Promise<string[]>(res => {
+        setTimeout(() => {
+            const newTracksFromServer = new Array(10).fill('1');
+            res(newTracksFromServer)
+        }, msDelay)
+    })
+}
 
 // todo: показали кнопку убрали и тут же опять показали.. полетит 2 запроса
 //
