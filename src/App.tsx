@@ -1,39 +1,71 @@
-import {useEffect, useState} from "react";
-import type {TrackDataItem, TracksResponse} from "./types.ts";
+import {useState, useSyncExternalStore} from "react";
+import {getState, subscribe} from "./store.ts";
+import {getStateOnline, subscribeOnline} from "./online-store.ts";
+
 
 
 export function App() {
-    const [tracks, setTracks] = useState<TrackDataItem[]>([])
+    const [show, setShow] = useState(true);
+    console.log('App')
+    //button.addEventListener(listener);
+    //button.removeEventListener(listener);
 
-    useEffect(() => {
-        // rest api
-        fetch('https://musicfun.it-incubator.app/api/1.0/playlists/tracks', {
-            headers: {
-                //'API-KEY': '08191417-56c8-418a-b93e-8ae881f38939'
-            }
-        })
-            .then(res => res.json() as Promise<TracksResponse> )
-            .then(json => {
-                console.log(json)
-                setTracks(json.data);
-            })
-    }, [])
+    // const unsubscribe = store.subscribe(listener);
 
     return (
         <div>
-            <h1>Music Fun</h1>
-            <ul>
-                {tracks.map((track) => {
-                    return <li>
-                        <h4>{track.attributes.title}</h4>
-                        <audio
-                            src={track.attributes.attachments[0].url}
-                            controls={true}
-                        />
-                    </li>
-                })}
-            </ul>
+            <Online />
+            <button onClick={() => setShow(!show)}>
+                {show ? 'Destroy' : 'Mount'}
+            </button>
+            {show && <TodosApp2/>}
         </div>
     )
 }
+
+
+
+
+function Online() {
+    const isOnline = useSyncExternalStore(
+        subscribeOnline,
+        getStateOnline
+    );
+
+    return <div>{isOnline ? 'online' : 'offline'}</div>
+    // ...
+}
+
+function TodosApp2() {
+    console.log("TodosApp")
+    const count = useSyncExternalStore(
+        subscribe,
+        getState
+    );
+
+    return <div>{count.value}</div>
+    // ...
+}
+
+
+function TodosApp() {
+    console.log("TodosApp")
+    const count = useSyncExternalStore(
+        function subscribe() {
+            console.log('subscribe')
+            return function unsubscribe() {
+                console.log('unsubscribe')
+            }
+        },
+        function getSnapshot() {
+            console.log('getSnapshot')
+            return 1
+        }
+        );
+
+    return <div>{count}</div>
+    // ...
+}
+
+
 
